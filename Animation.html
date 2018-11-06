@@ -1,0 +1,62 @@
+<div class="b-language-selection__wrapper" style="display: none;">
+    <div class="b-language-selection__close-wrapper">
+        <div class="b-language-selection__close d-flex">
+            <span onclick="hideLanguageSelectionBlock(event);">
+                <b-svg src="close_icon.svg" class="d-flex l-m-left" height="25" width="25"></b-svg>
+            </span>
+        </div>
+    </div>
+    <div class="b-language-selection">
+        <h3 class="b-language-selection__title animation__item">@(Html.Raw(DV.SelectLanguage))</h3>
+        <ul class="b-language-selection__list">
+            @{
+                var langs = new string[] { "en", "ru", "es", "pt" };
+                var localу = new string[] { "English", "Русский", "Español", "Português" };
+                var animDelay = 100;
+                var num = 0;
+                foreach (string language in langs)
+                {
+                    <li class="b-language-selection__list_item animation__item @(language == @System.Globalization.CultureInfo.CurrentCulture.Name ? "active" : "")" style="animation-delay: @(animDelay)ms">
+
+                        <a asp-route-culture="@(language)">
+                            <div>
+                                <b-svg src="@(language)_flag_icon.svg" class="d-flex l-m-left" height="36" width="36"></b-svg>
+                                <span>@(localу[num])</span>
+                            </div>
+                        </a>
+                    </li>
+                    num++;
+                    animDelay += 50;
+                }
+            }
+        </ul>
+        <b-button class="b-language-selection__button animation__item" style="animation-delay: 270ms" color="Gray" outline="true" onclick="hideLanguageSelectionBlock(event);" text="@(Html.Raw(DV.Close))"></b-button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var buttonHide = $('.b-language-selection__button');
+    var wrapper = $('.b-language-selection__wrapper');
+    var buttonClose = $('.b-language-selection__close span');
+
+    function hundler() {
+        wrapper.removeClass('animationIn');
+        buttonHide.off("animationend", hundler);
+    };
+    function showLanguageSelectionBlock(event) {
+        wrapper.show().addClass('animationBg animationIn');
+        buttonClose.addClass('animationBtnHide');
+        buttonHide.on("animationend", hundler);
+        event.preventDefault();
+    }
+    function hideLanguageSelectionBlock(event) {
+        wrapper.hide();
+        event.preventDefault();
+    };
+
+    window.addEventListener("keydown", function (e) {
+        if (e.keyCode == 27) {
+            hideLanguageSelectionBlock();
+        }
+    }, true);
+</script>
